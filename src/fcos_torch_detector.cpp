@@ -109,7 +109,7 @@ public:
         int y2 = static_cast<int>(boxes_a[i][3]);
 
         // Get class label
-        int label_idx = labels_a[i];
+        size_t label_idx = labels_a[i];
         std::string class_name = (label_idx < COCO_CLASSES.size()) ? COCO_CLASSES[label_idx] : "unknown";
 
         // Draw bounding box

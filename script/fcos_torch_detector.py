@@ -23,7 +23,7 @@ COCO_INSTANCE_CATEGORY_NAMES = [
 ]
 
 # Load image using OpenCV and convert to RGB
-image_path = 'fcos_object_detection/script/image_000.png'
+image_path = 'fcos_torch_backend/script/image_000.png'
 image_bgr = cv2.imread(image_path)
 image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
 
@@ -37,7 +37,6 @@ model.eval()
 # Run the model
 with torch.no_grad():
     outputs = model(image_tensor)[0]
-
 
 # Draw predictions with confidence > 0.5
 boxes = outputs["boxes"]
