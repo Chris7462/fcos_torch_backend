@@ -13,9 +13,8 @@ find_package(Torch REQUIRED)
 find_package(TorchVision REQUIRED)
 find_package(OpenCV REQUIRED)
 
-add_executable(fcos_torch_backend
-  src/fcos_torch_backend.cpp
-  src/main.cpp)
+add_library(fcos_torch_backend
+  src/fcos_torch_backend.cpp)
 
 target_include_directories(fcos_torch_backend
   PUBLIC
@@ -64,14 +63,14 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 
-# find_package(ament_cmake_gtest REQUIRED)
+  find_package(ament_cmake_gtest REQUIRED)
 
-# ament_add_gtest(test_fcos_torch_backend
-#   test/test_fcos_torch_backend.cpp)
+  ament_add_gtest(test_fcos_torch_backend
+    test/test_fcos_torch_backend.cpp)
 
-# target_link_libraries(test_fcos_torch_backend
-#   fcoc_torch_backend
-#   gtest_main)
+  target_link_libraries(test_fcos_torch_backend
+    fcos_torch_backend
+    gtest_main)
 
 endif()
 

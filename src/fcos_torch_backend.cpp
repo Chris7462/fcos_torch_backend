@@ -31,10 +31,10 @@ FCOSTorchBackend::FCOSTorchBackend(const std::string & model_path)
 }
 
 // Convert OpenCV Mat to PyTorch tensor
-torch::Tensor FCOSTorchBackend::mat_to_tensor(const cv::Mat& image)
+torch::Tensor FCOSTorchBackend::mat_to_tensor(const cv::Mat & image)
 {
   cv::Mat float_image;
-  image.convertTo(float_image, CV_32F, 1.0/255.0);
+  image.convertTo(float_image, CV_32F, 1.0 / 255.0);
 
   // Convert from HWC to CHW
   auto tensor = torch::from_blob(float_image.data, {image.rows, image.cols, 3}, torch::kFloat);
@@ -44,7 +44,8 @@ torch::Tensor FCOSTorchBackend::mat_to_tensor(const cv::Mat& image)
 }
 
 // Run inference
-std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FCOSTorchBackend::predict(const cv::Mat & image)
+std::tuple<torch::Tensor, torch::Tensor,
+  torch::Tensor> FCOSTorchBackend::predict(const cv::Mat & image)
 {
   torch::NoGradGuard no_grad;
 
@@ -77,8 +78,8 @@ std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FCOSTorchBackend::predic
 }
 
 // Draw predictions on image
-void FCOSTorchBackend::draw_predictions(cv::Mat & image,
-  const torch::Tensor & boxes, const torch::Tensor & scores,
+void FCOSTorchBackend::draw_predictions(
+  cv::Mat & image, const torch::Tensor & boxes, const torch::Tensor & scores,
   const torch::Tensor & labels, float confidence_threshold)
 {
   auto boxes_a = boxes.accessor<float, 2>();
@@ -99,7 +100,8 @@ void FCOSTorchBackend::draw_predictions(cv::Mat & image,
 
       // Get class label
       size_t label_idx = labels_a[i];
-      std::string class_name = (label_idx < config::COCO_CLASSES.size()) ? config::COCO_CLASSES[label_idx] : "unknown";
+      std::string class_name = (label_idx <
+        config::COCO_CLASSES.size()) ? config::COCO_CLASSES[label_idx] : "unknown";
 
       // Draw bounding box
       cv::rectangle(image, cv::Point(x1, y1), cv::Point(x2, y2), cv::Scalar(0, 0, 255), 2);

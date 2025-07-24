@@ -14,8 +14,9 @@ public:
   // Run inference
   std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> predict(const cv::Mat & image);
 
-  void draw_predictions(cv::Mat & image, const torch::Tensor & boxes,
-    const torch::Tensor & scores, const torch::Tensor & labels, float confidence_threshold = 0.6f);
+  void draw_predictions(
+    cv::Mat & image, const torch::Tensor & boxes, const torch::Tensor & scores,
+    const torch::Tensor & labels, float confidence_threshold = 0.6f);
 
 private:
   // Convert OpenCV Mat to PyTorch tensor
