@@ -14,12 +14,17 @@ FCOSTorchBackend::FCOSTorchBackend(const std::string & model_path)
 : device_(torch::cuda::is_available() ? torch::kCUDA : torch::kCPU)
 {
   try {
+    if (model_path.empty()) {
+      throw std::runtime_error("Model path cannot be empty.");
+    }
     // Load the TorchScript model
     model_ = torch::jit::load(model_path);
     model_.to(device_);
     model_.eval();
     std::cout << "Model loaded successfully on " <<
       (device_.is_cuda() ? "CUDA" : "CPU") << std::endl;
+  } catch (const c10::Error & e) {
+    throw std::runtime_error("PyTorch error loading model: " + std::string(e.what()));
   } catch (const std::exception & e) {
     throw std::runtime_error("Error loading model: " + std::string(e.what()));
   }
@@ -31,10 +36,9 @@ torch::Tensor FCOSTorchBackend::mat_to_tensor(const cv::Mat& image)
   cv::Mat float_image;
   image.convertTo(float_image, CV_32F, 1.0/255.0);
 
-  // Convert from HWC to CHW and add batch dimension
+  // Convert from HWC to CHW
   auto tensor = torch::from_blob(float_image.data, {image.rows, image.cols, 3}, torch::kFloat);
   tensor = tensor.permute({2, 0, 1}); // HWC to CHW
-  tensor = tensor.unsqueeze(0); // Add batch dimension
 
   return tensor.to(device_);
 }
@@ -45,12 +49,7 @@ std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FCOSTorchBackend::predic
   torch::NoGradGuard no_grad;
 
   // Convert image to tensor (remove batch dimension since we'll create a list)
-  cv::Mat float_image;
-  image.convertTo(float_image, CV_32F, 1.0/255.0);
-
-  auto tensor = torch::from_blob(float_image.data, {image.rows, image.cols, 3}, torch::kFloat);
-  tensor = tensor.permute({2, 0, 1}); // HWC to CHW
-  tensor = tensor.to(device_);
+  auto tensor = mat_to_tensor(image);
 
   // Create a list of tensors (this is what FCOS expects)
   std::vector<torch::Tensor> image_list = {tensor};
@@ -78,7 +77,9 @@ std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FCOSTorchBackend::predic
 }
 
 // Draw predictions on image
-void FCOSTorchBackend::draw_predictions(cv::Mat & image, const torch::Tensor & boxes, const torch::Tensor & scores, const torch::Tensor & labels, float confidence_threshold)
+void FCOSTorchBackend::draw_predictions(cv::Mat & image,
+  const torch::Tensor & boxes, const torch::Tensor & scores,
+  const torch::Tensor & labels, float confidence_threshold)
 {
   auto boxes_a = boxes.accessor<float, 2>();
   auto scores_a = scores.accessor<float, 1>();
