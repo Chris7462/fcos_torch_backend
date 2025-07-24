@@ -17,5 +17,5 @@ dummy_input = torch.randn(1, 3, 374, 1238)
 
 # Convert to TorchScript (you must use scripting because tracing won't work with dynamic model logic)
 scripted_model = torch.jit.script(model)
-scripted_model.save(args['output'] + "fcos_resnet50_fpn.pt")
-print("Model successfully scripted and saved as 'fcos_resnet50_fpn.pt'")
+scripted_model.save(args['output'] + "fcos_resnet50_fpn_374x1238.pt")
+print("Model successfully scripted and saved as 'fcos_resnet50_fpn_374x1238.pt'")

@@ -14,7 +14,8 @@ find_package(TorchVision REQUIRED)
 find_package(OpenCV REQUIRED)
 
 add_executable(fcos_torch_backend
-  src/fcos_torch_detector.cpp)
+  src/fcos_torch_backend.cpp
+  src/main.cpp)
 
 target_include_directories(fcos_torch_backend
   PUBLIC
