@@ -98,10 +98,9 @@ void FCOSTorchBackend::draw_predictions(
       int x2 = static_cast<int>(boxes_a[i][2]);
       int y2 = static_cast<int>(boxes_a[i][3]);
 
-      // Get class label
-      size_t label_idx = labels_a[i];
-      std::string class_name = (label_idx <
-        config::COCO_CLASSES.size()) ? config::COCO_CLASSES[label_idx] : "unknown";
+      // Get class label using the proper COCO category ID mapping
+      int category_id = static_cast<int>(labels_a[i]);
+      std::string class_name = config::get_class_name(category_id);
 
       // Draw bounding box
       cv::rectangle(image, cv::Point(x1, y1), cv::Point(x2, y2), cv::Scalar(0, 0, 255), 2);

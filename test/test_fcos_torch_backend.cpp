@@ -112,10 +112,14 @@ protected:
       EXPECT_GE(scores_a[i], 0.0f) << "Score should be >= 0";
       EXPECT_LE(scores_a[i], 1.0f) << "Score should be <= 1";
 
-      // Check label validity (should be valid COCO class indices)
-      EXPECT_GE(labels_a[i], 0) << "Label should be >= 0";
-      EXPECT_LT(labels_a[i], static_cast<long>(config::COCO_CLASSES.size()))
-        << "Label should be < number of COCO classes";
+      // Check label validity (should be valid COCO category IDs)
+      int category_id = static_cast<int>(labels_a[i]);
+      EXPECT_GE(category_id, 0) << "Category ID should be >= 0";
+
+      // Check if category ID exists in the COCO mapping
+      auto it = config::COCO_INSTANCE_CATEGORY_NAMES.find(category_id);
+      EXPECT_NE(it, config::COCO_INSTANCE_CATEGORY_NAMES.end())
+        << "Category ID " << category_id << " should exist in COCO mapping";
     }
   }
 
