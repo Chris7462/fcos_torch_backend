@@ -11,16 +11,18 @@
 !dconfig
 
 # Ignore files with certain extension
-*.png
-*.onnx
-*.pt
-*.trt
+*.swp
 *.pyc
-*.engine
+*.aux
+*.log
+*.pdf
+*.pt
+*.png
 
 # Ignore build, devel, and logs folder
 build
 install
 log
+docs
 __pycache__
 .vscode
