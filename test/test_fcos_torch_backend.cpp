@@ -117,8 +117,8 @@ protected:
       EXPECT_GE(category_id, 0) << "Category ID should be >= 0";
 
       // Check if category ID exists in the COCO mapping
-      auto it = config::COCO_INSTANCE_CATEGORY_NAMES.find(category_id);
-      EXPECT_NE(it, config::COCO_INSTANCE_CATEGORY_NAMES.end())
+      auto it = config::COCO_CLASSES_NAME_MAP.find(category_id);
+      EXPECT_NE(it, config::COCO_CLASSES_NAME_MAP.end())
         << "Category ID " << category_id << " should exist in COCO mapping";
     }
   }

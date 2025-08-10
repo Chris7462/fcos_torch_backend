@@ -19,7 +19,7 @@ add_custom_command(
   COMMAND ${PYTHON3_EXECUTABLE} ${EXPORT_SCRIPT_PATH} --output-dir ${MODELS_DIR}
   DEPENDS ${EXPORT_SCRIPT_PATH}
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-  COMMENT "Generating Script Torch format: ${MODEL_FILE}..."
+  COMMENT "Generating ScriptTorch format: ${MODEL_FILE}..."
   VERBATIM
 )
 

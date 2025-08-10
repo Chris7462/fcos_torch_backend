@@ -1,4 +1,4 @@
-# FCOS Segmentation Torch Backend
+# FCOS Object Detection Torch Backend
 
 ## Preparation
 
@@ -21,7 +21,7 @@ cmake .. -DCMAKE_BUILD_TYPE=Release \
          -DUSE_CUDSS=ON \
          -DUSE_CUFILE=ON \
          -DUSE_CUSPARSELT=ON \
-         -DCMAKE_INSTALL_PREFIX=/home/yi-chen/thirdparty/libtorch
+         -DCMAKE_INSTALL_PREFIX=$HOME/thirdparty/libtorch
 cmake --build . -j8
 cmake --install .
 ```
@@ -37,8 +37,8 @@ export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH
 ## Point to your custom libtorch installation
 Add the following to your `~/.bashrc` file
 ```bash
-export Torch_DIR="/home/yi-chen/thirdparty/libtorch/share/cmake/Torch"
-export LD_LIBRARY_PATH="/home/yi-chen/thirdparty/libtorch/lib:$LD_LIBRARY_PATH"
+export Torch_DIR="$HOME/thirdparty/libtorch/share/cmake/Torch"
+export LD_LIBRARY_PATH="$HOME/thirdparty/libtorch/lib:$LD_LIBRARY_PATH"
 ```
 
 ### Build LibTorchVision
@@ -49,8 +49,8 @@ cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release \
          -DBUILD_SHARED_LIBS=ON \
          -DWITH_CUDA=ON \
-         -DCMAKE_PREFIX_PATH=/home/yi-chen/thirdparty/libtorch \
-         -DCMAKE_INSTALL_PREFIX=/home/yi-chen/thirdparty/libtorchvision
+         -DCMAKE_PREFIX_PATH=$HOME/thirdparty/libtorch \
+         -DCMAKE_INSTALL_PREFIX=$HOME/thirdparty/libtorchvision
 cmake --build . -j8
 cmake --install .
 ```
@@ -58,6 +58,6 @@ cmake --install .
 ## Point to your custom libtorchvision installation
 Add the following to your `~/.bashrc` file
 ```bash
-export TorchVision_DIR="/home/yi-chen/thirdparty/libtorchvision/share/cmake/TorchVision"
-export LD_LIBRARY_PATH="/home/yi-chen/thirdparty/libtorchvision/lib:$LD_LIBRARY_PATH"
+export TorchVision_DIR="$HOME/thirdparty/libtorchvision/share/cmake/TorchVision"
+export LD_LIBRARY_PATH="$HOME/thirdparty/libtorchvision/lib:$LD_LIBRARY_PATH"
 ```

@@ -27,7 +27,8 @@ COCO_INSTANCE_CATEGORY_NAMES = {
     78: 'microwave', 79: 'oven', 80: 'toaster', 81: 'sink', 82: 'refrigerator',
     84: 'book', 85: 'clock', 86: 'vase', 87: 'scissors', 88: 'teddy bear',
     89: 'hair drier', 90: 'toothbrush'}
-    # IDs 12, 26, 29, 30, 45, 66, 68, 69, 71, 83 are not used (they were categories in early drafts of COCO but removed).
+# IDs 12, 26, 29, 30, 45, 66, 68, 69, 71, 83 are not used
+# they were categories in early drafts of COCO but removed.
 
 # Load image using OpenCV and convert to RGB
 image_path = 'fcos_torch_backend/test/image_000.png'
@@ -51,7 +52,7 @@ scores = outputs['scores']
 labels = outputs['labels']
 confidence_threshold = 0.5
 
-print("Detected objects:")
+print('Detected objects:')
 for i, (box, score, label) in enumerate(zip(boxes, scores, labels)):
     if score >= confidence_threshold:
         # Convert label to integer for dictionary lookup
@@ -60,7 +61,7 @@ for i, (box, score, label) in enumerate(zip(boxes, scores, labels)):
         # Get class name using dictionary lookup (handles gaps correctly)
         class_name = COCO_INSTANCE_CATEGORY_NAMES.get(label_id, f'unknown_class_{label_id}')
 
-        print(f"Detection {i+1}: {class_name} (ID: {label_id}) - Confidence: {score:.3f}")
+        print(f'Detection {i+1}: {class_name} (ID: {label_id}) - Confidence: {score:.3f}')
 
         # Draw bounding box
         x1, y1, x2, y2 = map(int, box)
@@ -80,8 +81,9 @@ plt.show()
 
 # Optional: Print all unique label IDs found in the detections
 unique_labels = torch.unique(labels)
-print(f"\nAll detected label IDs: {unique_labels.tolist()}")
-print("Corresponding class names:")
+print(f'\nAll detected label IDs: {unique_labels.tolist()}')
+print('Corresponding class names:')
 for label_id in unique_labels:
-    class_name = COCO_INSTANCE_CATEGORY_NAMES.get(label_id.item(), f'unknown_class_{label_id.item()}')
-    print(f"  ID {label_id.item()}: {class_name}")
+    class_name = COCO_INSTANCE_CATEGORY_NAMES.get(label_id.item(),
+                                                  f'unknown_class_{label_id.item()}')
+    print(f'  ID {label_id.item()}: {class_name}')

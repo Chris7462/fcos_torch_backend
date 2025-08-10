@@ -33,7 +33,8 @@ const std::unordered_map<int, std::string> COCO_CLASSES_NAME_MAP = {
 // (they were categories in early drafts of COCO but removed).
 
 // Helper function to get class name from category ID
-inline std::string get_class_name(int category_id) {
+inline std::string get_class_name(int category_id)
+{
   auto it = COCO_CLASSES_NAME_MAP.find(category_id);
   return (it != COCO_CLASSES_NAME_MAP.end()) ? it->second : "unknown";
 }
