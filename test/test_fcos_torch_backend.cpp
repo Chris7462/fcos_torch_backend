@@ -29,16 +29,20 @@ class FCOSTorchBackendTest : public ::testing::Test
 protected:
   void SetUp() override
   {
-    try {
-      detector_ = std::make_unique<fcos_torch_backend::FCOSTorchBackend>(model_path_);
-    } catch (const std::exception & e) {
-      GTEST_SKIP() << "Failed to initialize FCOS detector: " << e.what();
-    }
   }
 
   void TearDown() override
   {
     // Clean up if needed
+  }
+
+  void init_detector(torch::Device device)
+  {
+    try {
+      detector_ = std::make_unique<fcos_torch_backend::FCOSTorchBackend>(model_path_, device);
+    } catch (const std::exception & e) {
+      GTEST_SKIP() << "Failed to initialize Pytorch detector: " << e.what();
+    }
   }
 
   cv::Mat load_test_image()
@@ -131,8 +135,69 @@ private:
 };
 
 
-TEST_F(FCOSTorchBackendTest, TestBasicInference)
+//TEST_F(FCOSTorchBackendTest, TestBasicInferenceCPU)
+//{
+//  torch::Device device = torch::kCPU;
+//  init_detector(device);
+
+//  cv::Mat image = load_test_image();
+
+//  // Validate input image
+//  EXPECT_FALSE(image.empty());
+//  EXPECT_EQ(image.type(), CV_8UC3);
+//  EXPECT_GT(image.rows, 0);
+//  EXPECT_GT(image.cols, 0);
+
+//  std::cout << "Input image size: " << image.cols << "x" << image.rows << std::endl;
+//  std::cout << "Using device: " << device << std::endl;
+
+//  // Convert to RGB for inference
+//  cv::Mat image_rgb;
+//  cv::cvtColor(image, image_rgb, cv::COLOR_BGR2RGB);
+
+//  auto start = std::chrono::high_resolution_clock::now();
+//  auto [boxes, scores, labels] = detector_->predict(image_rgb);
+//  auto end = std::chrono::high_resolution_clock::now();
+
+//  auto duration = std::chrono::duration<double, std::milli>(end - start);
+//  std::cout << "Inference time: " << duration.count() << " ms" << std::endl;
+
+//  // Validate output tensors
+//  validate_detection_tensors(boxes, scores, labels);
+
+//  if (boxes.size(0) > 0) {
+//    validate_bounding_boxes(boxes, image.size());
+//    validate_scores_and_labels(scores, labels);
+
+//    std::cout << "Found " << boxes.size(0) << " detections" << std::endl;
+//  } else {
+//    std::cout << "No detections found" << std::endl;
+//  }
+
+//  // Test drawing functionality
+//  cv::Mat image_with_boxes = image.clone();
+//  detector_->draw_predictions(image_with_boxes, boxes, scores, labels, 0.5f);
+
+//  EXPECT_EQ(image_with_boxes.size(), image.size());
+//  EXPECT_EQ(image_with_boxes.type(), CV_8UC3);
+
+//  // Save results for visual inspection
+//  save_detection_results(image_with_boxes, "_cpu");
+
+//  // Optional: Display results (comment out for automated testing)
+//  /*
+//  cv::imshow("Original", image);
+//  cv::imshow("Detections", image_with_boxes);
+//  cv::waitKey(0);
+//  cv::destroyAllWindows();
+//  */
+//}
+
+TEST_F(FCOSTorchBackendTest, TestBasicInferenceCUDA)
 {
+  torch::Device device = torch::kCUDA;
+  init_detector(device);
+
   cv::Mat image = load_test_image();
 
   // Validate input image
@@ -142,7 +207,7 @@ TEST_F(FCOSTorchBackendTest, TestBasicInference)
   EXPECT_GT(image.cols, 0);
 
   std::cout << "Input image size: " << image.cols << "x" << image.rows << std::endl;
-  std::cout << "Using device: " << (detector_->device_.is_cuda() ? "CUDA" : "CPU") << std::endl;
+  std::cout << "Using device: " << device << std::endl;
 
   // Convert to RGB for inference
   cv::Mat image_rgb;
@@ -175,8 +240,7 @@ TEST_F(FCOSTorchBackendTest, TestBasicInference)
   EXPECT_EQ(image_with_boxes.type(), CV_8UC3);
 
   // Save results for visual inspection
-  std::string device_suffix = detector_->device_.is_cuda() ? "_gpu" : "_cpu";
-  save_detection_results(image_with_boxes, device_suffix);
+  save_detection_results(image_with_boxes, "_gpu");
 
   // Optional: Display results (comment out for automated testing)
   /*

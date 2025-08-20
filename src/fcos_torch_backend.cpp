@@ -10,23 +10,17 @@
 namespace fcos_torch_backend
 {
 
-FCOSTorchBackend::FCOSTorchBackend(const std::string & model_path)
-: device_(torch::cuda::is_available() ? torch::kCUDA : torch::kCPU)
+FCOSTorchBackend::FCOSTorchBackend(const std::string & model_path, torch::Device device)
+: device_(device)
 {
   try {
-    if (model_path.empty()) {
-      throw std::runtime_error("Model path cannot be empty.");
-    }
-    // Load the TorchScript model
     model_ = torch::jit::load(model_path);
     model_.to(device_);
     model_.eval();
-    std::cout << "Model loaded successfully on " <<
-      (device_.is_cuda() ? "CUDA" : "CPU") << std::endl;
+
+    std::cout << "Model loaded successfully on " << device_ << std::endl;
   } catch (const c10::Error & e) {
-    throw std::runtime_error("PyTorch error loading model: " + std::string(e.what()));
-  } catch (const std::exception & e) {
-    throw std::runtime_error("Error loading model: " + std::string(e.what()));
+    throw std::runtime_error("Error loading the model: " + std::string(e.what()));
   }
 }
 
