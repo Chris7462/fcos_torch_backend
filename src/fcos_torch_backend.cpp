@@ -31,7 +31,8 @@ torch::Tensor FCOSTorchBackend::mat_to_tensor(const cv::Mat & image)
   image.convertTo(float_image, CV_32F, 1.0 / 255.0);
 
   // Convert from HWC to CHW
-  auto tensor = torch::from_blob(float_image.data, {image.rows, image.cols, 3}, torch::kFloat);
+  auto tensor = torch::from_blob(float_image.data, {image.rows, image.cols, 3},
+    torch::kFloat).clone();
   tensor = tensor.permute({2, 0, 1}); // HWC to CHW
 
   return tensor.to(device_);

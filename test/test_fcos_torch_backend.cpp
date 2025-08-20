@@ -135,63 +135,63 @@ private:
 };
 
 
-//TEST_F(FCOSTorchBackendTest, TestBasicInferenceCPU)
-//{
-//  torch::Device device = torch::kCPU;
-//  init_detector(device);
+TEST_F(FCOSTorchBackendTest, TestBasicInferenceCPU)
+{
+  torch::Device device = torch::kCPU;
+  init_detector(device);
 
-//  cv::Mat image = load_test_image();
+  cv::Mat image = load_test_image();
 
-//  // Validate input image
-//  EXPECT_FALSE(image.empty());
-//  EXPECT_EQ(image.type(), CV_8UC3);
-//  EXPECT_GT(image.rows, 0);
-//  EXPECT_GT(image.cols, 0);
+  // Validate input image
+  EXPECT_FALSE(image.empty());
+  EXPECT_EQ(image.type(), CV_8UC3);
+  EXPECT_GT(image.rows, 0);
+  EXPECT_GT(image.cols, 0);
 
-//  std::cout << "Input image size: " << image.cols << "x" << image.rows << std::endl;
-//  std::cout << "Using device: " << device << std::endl;
+  std::cout << "Input image size: " << image.cols << "x" << image.rows << std::endl;
+  std::cout << "Using device: " << device << std::endl;
 
-//  // Convert to RGB for inference
-//  cv::Mat image_rgb;
-//  cv::cvtColor(image, image_rgb, cv::COLOR_BGR2RGB);
+  // Convert to RGB for inference
+  cv::Mat image_rgb;
+  cv::cvtColor(image, image_rgb, cv::COLOR_BGR2RGB);
 
-//  auto start = std::chrono::high_resolution_clock::now();
-//  auto [boxes, scores, labels] = detector_->predict(image_rgb);
-//  auto end = std::chrono::high_resolution_clock::now();
+  auto start = std::chrono::high_resolution_clock::now();
+  auto [boxes, scores, labels] = detector_->predict(image_rgb);
+  auto end = std::chrono::high_resolution_clock::now();
 
-//  auto duration = std::chrono::duration<double, std::milli>(end - start);
-//  std::cout << "Inference time: " << duration.count() << " ms" << std::endl;
+  auto duration = std::chrono::duration<double, std::milli>(end - start);
+  std::cout << "Inference time: " << duration.count() << " ms" << std::endl;
 
-//  // Validate output tensors
-//  validate_detection_tensors(boxes, scores, labels);
+  // Validate output tensors
+  validate_detection_tensors(boxes, scores, labels);
 
-//  if (boxes.size(0) > 0) {
-//    validate_bounding_boxes(boxes, image.size());
-//    validate_scores_and_labels(scores, labels);
+  if (boxes.size(0) > 0) {
+    validate_bounding_boxes(boxes, image.size());
+    validate_scores_and_labels(scores, labels);
 
-//    std::cout << "Found " << boxes.size(0) << " detections" << std::endl;
-//  } else {
-//    std::cout << "No detections found" << std::endl;
-//  }
+    std::cout << "Found " << boxes.size(0) << " detections" << std::endl;
+  } else {
+    std::cout << "No detections found" << std::endl;
+  }
 
-//  // Test drawing functionality
-//  cv::Mat image_with_boxes = image.clone();
-//  detector_->draw_predictions(image_with_boxes, boxes, scores, labels, 0.5f);
+  // Test drawing functionality
+  cv::Mat image_with_boxes = image.clone();
+  detector_->draw_predictions(image_with_boxes, boxes, scores, labels, 0.5f);
 
-//  EXPECT_EQ(image_with_boxes.size(), image.size());
-//  EXPECT_EQ(image_with_boxes.type(), CV_8UC3);
+  EXPECT_EQ(image_with_boxes.size(), image.size());
+  EXPECT_EQ(image_with_boxes.type(), CV_8UC3);
 
-//  // Save results for visual inspection
-//  save_detection_results(image_with_boxes, "_cpu");
+  // Save results for visual inspection
+  save_detection_results(image_with_boxes, "_cpu");
 
-//  // Optional: Display results (comment out for automated testing)
-//  /*
-//  cv::imshow("Original", image);
-//  cv::imshow("Detections", image_with_boxes);
-//  cv::waitKey(0);
-//  cv::destroyAllWindows();
-//  */
-//}
+  // Optional: Display results (comment out for automated testing)
+  /*
+  cv::imshow("Original", image);
+  cv::imshow("Detections", image_with_boxes);
+  cv::waitKey(0);
+  cv::destroyAllWindows();
+  */
+}
 
 TEST_F(FCOSTorchBackendTest, TestBasicInferenceCUDA)
 {
