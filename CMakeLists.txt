@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16)
 project(fcos_torch_backend VERSION 1.0.0 LANGUAGES CXX)
 
 # Do not set the default build type automatically, leave it to the user
